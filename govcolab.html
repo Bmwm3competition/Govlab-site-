@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GovCo-Lab | Governo Colaborativo</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--azul:#1a2332;--azul2:#2d4059;--azulc:#3b82f6;--verde:#10b981;--amarelo:#f59e0b;--roxo:#8b5cf6;--vermelho:#ef4444;--cinza:#f0f4f8;--borda:#e2e8f0;--texto:#64748b;--raio:16px}
+body{font-family:'Segoe UI',Tahoma,sans-serif;background:var(--cinza);color:#1e293b;line-height:1.6}
+.nav{background:linear-gradient(135deg,#1a2332,#2d4059,#3b82f6);padding:12px 24px;position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(0,0,0,.3);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.nav-logo{color:#fff;text-decoration:none;display:flex;align-items:center;gap:10px;cursor:pointer}
+.nav-logo span:first-child{font-size:28px;background:rgba(255,255,255,.2);width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center}
+.nav-logo strong{font-size:1.2rem}
+.nav-logo small{display:block;font-size:.65rem;opacity:.7;letter-spacing:2px;text-transform:uppercase}
+.nav-btns{display:flex;gap:6px;flex-wrap:wrap}
+.nav-btn{color:#fff;text-decoration:none;padding:10px 16px;border-radius:10px;font-size:.82rem;font-weight:700;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);cursor:pointer;transition:.3s}
+.nav-btn:hover,.nav-btn.ativo{background:rgba(255,255,255,.25);transform:translateY(-2px)}
+.nav-btn.prefeito{background:rgba(245,158,11,.3);border-color:rgba(245,158,11,.5)}
+.nav-btn.prefeito:hover,.nav-btn.prefeito.ativo{background:rgba(245,158,11,.6)}
+.hero{background:linear-gradient(135deg,#1a2332,#2d4059,#3b82f6);padding:40px 24px 50px;text-align:center;color:#fff}
+.hero h2{font-size:2rem;font-weight:800;margin-bottom:12px}
+.hero p{opacity:.9;margin-bottom:24px;max-width:550px;margin-left:auto;margin-right:auto}
+.stats{display:flex;justify-content:center;gap:30px;flex-wrap:wrap}
+.stat b{display:block;font-size:1.8rem}
+.stat small{opacity:.7;font-size:.75rem;text-transform:uppercase;letter-spacing:1px}
+.container{max-width:900px;margin:0 auto;padding:30px 20px 50px}
+.container.wide{max-width:1100px}
+.card{background:#fff;border-radius:var(--raio);padding:28px;box-shadow:0 4px 20px rgba(0,0,0,.06);border:1px solid var(--borda);margin-bottom:20px}
+.card h3{font-size:1.3rem;font-weight:800;color:var(--azul);margin-bottom:6px;display:flex;align-items:center;gap:10px}
+.card .sub{color:var(--texto);margin-bottom:22px;font-size:.92rem}
+.form-g{margin-bottom:18px}
+.form-g label{display:block;font-weight:700;margin-bottom:6px;font-size:.88rem;color:var(--azul)}
+.form-g label .req{color:var(--vermelho)}
+.form-g input,.form-g textarea,.form-g select{width:100%;padding:13px 16px;border:2px solid var(--borda);border-radius:10px;font-size:.95rem;font-family:inherit;transition:.3s;background:#f8fafc}
+.form-g input:focus,.form-g textarea:focus,.form-g select:focus{outline:none;border-color:var(--azulc);background:#fff;box-shadow:0 0 0 4px rgba(59,130,246,.1)}
+.form-g textarea{min-height:100px;resize:vertical}
+.form-g small{display:block;margin-top:4px;color:var(--texto);font-size:.78rem}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 28px;border:none;border-radius:10px;font-size:.95rem;font-weight:700;cursor:pointer;transition:.3s;font-family:inherit;text-decoration:none}
+.btn:hover{transform:translateY(-2px)}
+.btn-blue{background:var(--azulc);color:#fff;width:100%;font-size:1rem;padding:15px}
+.btn-blue:hover{background:#2563eb;box-shadow:0 8px 25px rgba(59,130,246,.4)}
+.btn-green{background:var(--verde);color:#fff}
+.btn-green:hover{background:#059669;box-shadow:0 8px 25px rgba(16,185,129,.4)}
+.btn-yellow{background:var(--amarelo);color:#fff}
+.btn-yellow:hover{background:#d97706}
+.btn-red{background:var(--vermelho);color:#fff}
+.btn-red:hover{background:#dc2626}
+.btn-roxo{background:var(--roxo);color:#fff}
+.btn-roxo:hover{background:#7c3aed}
+.btn-outline{background:transparent;color:var(--azulc);border:2px solid var(--azulc)}
+.btn-outline:hover{background:var(--azulc);color:#fff}
+.btn-sm{padding:8px 16px;font-size:.8rem}
+.btn-xs{padding:6px 12px;font-size:.75rem}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important}
+.passos{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-top:16px}
+.passo{text-align:center;padding:20px 12px;background:#f8fafc;border-radius:var(--raio);border:1px solid var(--borda);transition:.3s}
+.passo:hover{transform:translateY(-3px);box-shadow:0 4px 15px rgba(0,0,0,.08)}
+.passo .num{width:42px;height:42px;border-radius:50%;background:var(--azulc);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;margin:0 auto 10px;font-size:1.1rem}
+.passo h4{font-size:.9rem;margin-bottom:4px}
+.passo p{font-size:.78rem;color:var(--texto)}
+.modal-bg{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:200;padding:20px;backdrop-filter:blur(4px)}
+.modal-bg.vis{display:flex}
+.modal{background:#fff;border-radius:var(--raio);padding:32px;max-width:480px;width:100%;text-align:center;animation:pop .4s ease;box-shadow:0 20px 60px rgba(0,0,0,.3);max-height:90vh;overflow-y:auto}
+@keyframes pop{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
+.modal .ico{font-size:3.5rem;margin-bottom:12px}
+.modal h3{font-size:1.3rem;font-weight:800;color:var(--azul);margin-bottom:10px}
+.modal p{color:var(--texto);font-size:.92rem;margin-bottom:6px}
+.modal .proto{display:inline-block;background:linear-gradient(135deg,#1a2332,#3b82f6);color:#fff;padding:8px 28px;border-radius:50px;font-size:1.4rem;font-weight:800;margin:14px 0;letter-spacing:2px}
+.modal .btn{margin-top:10px;width:100%}
+.busca-box{display:flex;gap:10px;margin-bottom:20px}
+.busca-box input{flex:1;padding:14px 18px;border:2px solid var(--borda);border-radius:10px;font-size:1.05rem;font-weight:700;font-family:inherit}
+.busca-box input:focus{outline:none;border-color:var(--azulc);box-shadow:0 0 0 4px rgba(59,130,246,.1)}
+.busca-box .btn{width:auto;white-space:nowrap}
+.resultado{display:none;animation:fade .5s ease}
+.resultado.vis{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+.dados{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.dado{background:#f8fafc;padding:12px 16px;border-radius:10px;border:1px solid var(--borda)}
+.dado label{display:block;font-size:.7rem;color:var(--texto);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:3px}
+.dado span{font-weight:700;color:var(--azul)}
+.prog-pct{text-align:center;font-weight:800;font-size:1.2rem;color:var(--azulc)}
+.prog-bar{background:#e2e8f0;border-radius:50px;height:10px;overflow:hidden;margin:10px 0 20px}
+.prog-fill{height:100%;border-radius:50px;background:linear-gradient(90deg,var(--verde),var(--azulc));transition:width 1s}
+.tl-item{display:flex;gap:14px;padding-bottom:22px;position:relative}
+.tl-item:last-child{padding-bottom:0}
+.tl-item::before{content:'';position:absolute;left:18px;top:40px;bottom:0;width:3px;background:var(--borda)}
+.tl-item:last-child::before{display:none}
+.tl-item.done::before{background:var(--verde)}
+.tl-dot{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;z-index:2;border:3px solid var(--borda);background:#fff}
+.tl-item.done .tl-dot{background:var(--verde);border-color:var(--verde);color:#fff}
+.tl-item.current .tl-dot{background:var(--azulc);border-color:var(--azulc);color:#fff;animation:pulse 2s infinite}
+.tl-item.wait .tl-dot{background:#f1f5f9;color:#cbd5e1}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(59,130,246,.4)}50%{box-shadow:0 0 0 8px rgba(59,130,246,0)}}
+.tl-text h4{font-weight:700;font-size:.95rem;color:var(--azul)}
+.tl-item.wait .tl-text h4{color:#94a3b8}
+.tl-text p{font-size:.82rem;color:var(--texto)}
+.rel{background:#f8fafc;padding:14px;border-radius:10px;border-left:4px solid var(--azulc);margin-bottom:16px}
+.rel-ia{background:#f0fdf4;padding:14px;border-radius:10px;border-left:4px solid var(--verde)}
+.filtros{display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap}
+.filtro{padding:7px 16px;border:2px solid var(--borda);border-radius:50px;background:#fff;color:var(--texto);font-size:.82rem;font-weight:600;cursor:pointer;transition:.3s;font-family:inherit}
+.filtro:hover,.filtro.ativo{background:var(--azulc);color:#fff;border-color:var(--azulc)}
+.proj-card{background:#fff;border-radius:var(--raio);padding:22px;border:2px solid var(--borda);transition:.3s;margin-bottom:16px}
+.proj-card:hover{border-color:var(--azulc);box-shadow:0 8px 25px rgba(0,0,0,.1);transform:translateY(-3px)}
+.proj-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px}
+.tag{padding:4px 12px;border-radius:20px;font-size:.72rem;font-weight:700;text-transform:uppercase}
+.tag-obras{background:#fef3c7;color:#92400e}.tag-saude{background:#d1fae5;color:#065f46}.tag-educ{background:#dbeafe;color:#1e40af}.tag-seg{background:#fce7f3;color:#9d174d}.tag-amb{background:#d1fae5;color:#065f46}.tag-trans{background:#e0e7ff;color:#3730a3}.tag-adm{background:#f1f5f9;color:#475569}.tag-cultura{background:#fdf2f8;color:#9d174d}.tag-esporte{background:#ecfdf5;color:#065f46}
+.proj-card h3{font-size:1.05rem;font-weight:800;color:var(--azul);margin-bottom:6px}
+.proj-card p.desc{color:var(--texto);font-size:.87rem;margin-bottom:12px}
+.proj-meta{display:flex;justify-content:space-between;font-size:.78rem;color:var(--texto);margin-bottom:8px;flex-wrap:wrap;gap:6px}
+.vbar{width:100%;height:7px;background:#e2e8f0;border-radius:50px;overflow:hidden;margin:10px 0}
+.vbar-fill{height:100%;border-radius:50px;background:linear-gradient(90deg,var(--azulc),var(--roxo));transition:width .8s}
+.proj-foot{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.votos b{font-size:1.4rem;color:var(--azul)}
+.votos small{color:var(--texto);font-size:.78rem;display:block}
+.interacoes{display:flex;gap:12px;align-items:center;margin-top:12px;padding-top:12px;border-top:1px solid var(--borda)}
+.inter-btn{display:flex;align-items:center;gap:4px;padding:6px 12px;border-radius:20px;border:1px solid var(--borda);background:#f8fafc;cursor:pointer;font-size:.8rem;font-weight:600;color:var(--texto);transition:.3s;font-family:inherit}
+.inter-btn:hover{background:var(--azulc);color:#fff;border-color:var(--azulc)}
+.inter-btn.curtido{background:#fef2f2;border-color:#fca5a5;color:var(--vermelho)}
+.comentarios{margin-top:12px;padding-top:12px;border-top:1px solid var(--borda)}
+.comentario{background:#f8fafc;padding:10px 14px;border-radius:10px;margin-bottom:8px;font-size:.85rem}
+.comentario strong{color:var(--azul);font-size:.8rem}
+.comentario p{color:var(--texto);margin-top:2px}
+.comentario small{color:#94a3b8;font-size:.72rem}
+.coment-form{display:flex;gap:8px;margin-top:8px}
+.coment-form input{flex:1;padding:8px 12px;border:1px solid var(--borda);border-radius:8px;font-size:.85rem;font-family:inherit}
+.coment-form input:focus{outline:none;border-color:var(--azulc)}
+.notif{position:fixed;top:75px;right:16px;z-index:3000;max-width:380px;padding:16px 20px;border-radius:10px;display:flex;gap:12px;align-items:flex-start;box-shadow:0 10px 40px rgba(0,0,0,.2);animation:slide .4s ease;border:2px solid}
+@keyframes slide{from{opacity:0;transform:translateX(80px)}to{opacity:1;transform:translateX(0)}}
+.notif-ok{background:#ecfdf5;border-color:#a7f3d0;color:#065f46}
+.notif-err{background:#fef2f2;border-color:#fecaca;color:#991b1b}
+.notif-warn{background:#fffbeb;border-color:#fde68a;color:#92400e}
+.notif .ni{font-size:1.3rem}
+.notif h4{font-weight:700;font-size:.9rem}
+.notif p{font-size:.82rem;opacity:.9}
+.footer{background:var(--azul);color:#fff;text-align:center;padding:24px;margin-top:30px}
+.footer p{opacity:.7;font-size:.82rem}
+.pagina{display:none}
+.pagina.ativa{display:block}
+/* LOGIN */
+.login-box{max-width:400px;margin:60px auto;text-align:center}
+.login-box .card{padding:36px}
+.login-ico{font-size:4rem;margin-bottom:12px}
+/* ADMIN */
+.admin-header{background:linear-gradient(135deg,#92400e,#f59e0b);padding:30px 24px;text-align:center;color:#fff}
+.admin-header h2{font-size:1.8rem}
+.admin-stats{display:flex;justify-content:center;gap:20px;margin-top:16px;flex-wrap:wrap}
+.admin-stat{background:rgba(255,255,255,.2);padding:12px 20px;border-radius:12px;backdrop-filter:blur(10px)}
+.admin-stat b{display:block;font-size:1.5rem}
+.admin-stat small{opacity:.8;font-size:.75rem}
+.admin-chamado{background:#fff;border:2px solid var(--borda);border-radius:var(--raio);padding:20px;margin-bottom:14px;transition:.3s}
+.admin-chamado:hover{box-shadow:0 4px 15px rgba(0,0,0,.08)}
+.admin-chamado-head{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;margin-bottom:10px}
+.admin-chamado h4{font-size:1rem;color:var(--azul)}
+.admin-chamado p{font-size:.85rem;color:var(--texto);margin-bottom:8px}
+.admin-btns{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.status-badge{padding:4px 12px;border-radius:20px;font-size:.75rem;font-weight:700}
+.sb-1{background:#dbeafe;color:#1e40af}
+.sb-2{background:#fef3c7;color:#92400e}
+.sb-3{background:#e0e7ff;color:#3730a3}
+.sb-4{background:#d1fae5;color:#065f46}
+.sb-5{background:#dcfce7;color:#166534}
+.assinatura{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:2px solid #86efac;border-radius:12px;padding:16px;margin-top:12px;text-align:center}
+.assinatura p{color:#166534;font-weight:700;font-size:.9rem}
+.assinatura .sig{font-family:'Georgia',serif;font-size:1.4rem;color:#166534;font-style:italic;margin-top:6px}
+.tab-btns{display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap}
+.tab-btn{padding:10px 20px;border:2px solid var(--borda);border-radius:10px;background:#fff;font-weight:700;font-size:.85rem;cursor:pointer;transition:.3s;font-family:inherit;color:var(--texto)}
+.tab-btn:hover,.tab-btn.ativo{background:var(--azulc);color:#fff;border-color:var(--azulc)}
+.ranking-item{display:flex;align-items:center;gap:12px;padding:12px 16px;background:#f8fafc;border-radius:10px;margin-bottom:8px;border:1px solid var(--borda)}
+.ranking-pos{width:32px;height:32px;border-radius:50%;background:var(--azulc);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;flex-shrink:0}
+.ranking-pos.gold{background:#f59e0b}
+.ranking-pos.silver{background:#94a3b8}
+.ranking-pos.bronze{background:#b45309}
+.ranking-info{flex:1}
+.ranking-info strong{font-size:.9rem;color:var(--azul)}
+.ranking-info small{color:var(--texto);font-size:.78rem}
+@media(max-width:600px){.nav{flex-direction:column;text-align:center}.form-row,.dados{grid-template-columns:1fr}.busca-box{flex-direction:column}.hero h2{font-size:1.4rem}.passos{grid-template-columns:1fr 1fr}.admin-btns{flex-direction:column}.admin-btns .btn{width:100%}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+<a class="nav-logo" onclick="ir('criar')"><span>🏛️</span><div><strong>GovCo-Lab</strong><small>Participação Cidadã</small></div></a>
+<div class="nav-btns">
+<a class="nav-btn ativo" id="nav-criar" onclick="ir('criar')">📝 Chamado</a>
+<a class="nav-btn" id="nav-acompanhar" onclick="ir('acompanhar')">🔍 Acompanhar</a>
+<a class="nav-btn" id="nav-votar" onclick="ir('votar')">🗳️ Votar</a>
+<a class="nav-btn prefeito" id="nav-prefeito" onclick="ir('prefeito')">🏛️ Prefeito</a>
+</div>
+</nav>
+
+<!-- ===== CRIAR CHAMADO ===== -->
+<div class="pagina ativa" id="pag-criar">
+<section class="hero">
+<h2>Sua voz transforma a cidade 🏙️</h2>
+<p>Envie sua sugestão, acompanhe o andamento e vote nos projetos do seu bairro.</p>
+<div class="stats">
+<div class="stat"><b id="s1">0</b><small>Chamados</small></div>
+<div class="stat"><b id="s2">0</b><small>Em votação</small></div>
+<div class="stat"><b id="s3">0</b><small>Votos</small></div>
+<div class="stat"><b id="s4">0</b><small>Aprovados</small></div>
+</div>
+</section>
+<div class="container">
+<div class="card">
+<h3>⚡ Como funciona?</h3>
+<p class="sub">Do seu relato até a ação real</p>
+<div class="passos">
+<div class="passo"><div class="num">1</div><h4>📝 Relate</h4><p>Conte o problema</p></div>
+<div class="passo"><div class="num">2</div><h4>🤖 IA Analisa</h4><p>Projeto técnico</p></div>
+<div class="passo"><div class="num">3</div><h4>🗳️ Votação</h4><p>Comunidade apoia</p></div>
+<div class="passo"><div class="num">4</div><h4>🏛️ Prefeito</h4><p>Assina e aprova</p></div>
+<div class="passo"><div class="num">5</div><h4>🚀 Execução</h4><p>Vira realidade</p></div>
+</div>
+</div>
+<div class="card">
+<h3>📝 Nova Sugestão</h3>
+<p class="sub">A IA vai transformar seu relato em projeto técnico.</p>
+<form id="formChamado" onsubmit="return enviarChamado(event)">
+<div class="form-row">
+<div class="form-g"><label>Nome <span class="req">*</span></label><input type="text" id="f-nome" placeholder="Maria da Silva" required></div>
+<div class="form-g"><label>E-mail <span class="req">*</span></label><input type="email" id="f-email" placeholder="seu@email.com" required></div>
+</div>
+<div class="form-row">
+<div class="form-g"><label>Bairro <span class="req">*</span></label><input type="text" id="f-bairro" placeholder="Centro, Vila Nova..." required></div>
+<div class="form-g"><label>Categoria <span class="req">*</span></label>
+<select id="f-cat" required>
+<option value="">Selecione...</option>
+<option value="infraestrutura">🏗️ Infraestrutura</option>
+<option value="saude">🏥 Saúde</option>
+<option value="educacao">📚 Educação</option>
+<option value="seguranca">🔒 Segurança</option>
+<option value="meio-ambiente">🌳 Meio Ambiente</option>
+<option value="transito">🚦 Trânsito</option>
+<option value="cultura">🎭 Cultura</option>
+<option value="esporte">⚽ Esporte</option>
+<option value="outro">📋 Outro</option>
+</select></div>
+</div>
+<div class="form-g"><label>Seu Relato <span class="req">*</span></label><textarea id="f-relato" placeholder="Descreva o problema ou ideia com detalhes..." required></textarea></div>
+<button type="submit" class="btn btn-blue" id="btnEnviar">📤 Enviar Minha Sugestão</button>
+</form>
+</div>
+</div>
+</div>
+
+<!-- ===== ACOMPANHAR ===== -->
+<div class="pagina" id="pag-acompanhar">
+<div class="container">
+<div class="card">
+<h3>🔍 Onde está o meu pedido?</h3>
+<p class="sub">Digite o número do protocolo.</p>
+<div class="busca-box">
+<input type="text" id="inp-proto" placeholder="Ex: 1402" maxlength="10" onkeypress="if(event.key==='Enter')buscar()">
+<button class="btn btn-blue" style="width:auto" onclick="buscar()">🔍 Buscar</button>
+</div>
+<p style="text-align:center;color:var(--texto);font-size:.83rem">💡 Teste: <b>1401</b> a <b>1410</b></p>
+</div>
+<div id="nao-achou" style="display:none" class="card"><p style="text-align:center">🔍 <b>Protocolo não encontrado.</b></p></div>
+<div id="resultado" class="resultado">
+<div class="card">
+<h3>📋 Dados do Chamado</h3>
+<div class="dados">
+<div class="dado"><label>Protocolo</label><span id="r-proto"></span></div>
+<div class="dado"><label>Cidadão</label><span id="r-nome"></span></div>
+<div class="dado"><label>Data</label><span id="r-data"></span></div>
+<div class="dado"><label>Bairro</label><span id="r-bairro"></span></div>
+<div class="dado"><label>Projeto (IA)</label><span id="r-titulo"></span></div>
+<div class="dado"><label>Secretaria</label><span id="r-sec"></span></div>
+<div class="dado"><label>Custo</label><span id="r-custo"></span></div>
+<div class="dado"><label>Status</label><span id="r-status"></span></div>
+</div>
+<div class="dado" style="margin-bottom:14px"><label>Votos</label><span id="r-votos"></span></div>
+</div>
+<div class="card">
+<h3>📊 Progresso</h3>
+<div class="prog-pct" id="r-pct">0%</div>
+<div class="prog-bar"><div class="prog-fill" id="r-bar" style="width:0%"></div></div>
+<div id="timeline">
+<div class="tl-item wait"><div class="tl-dot">📥</div><div class="tl-text"><h4>Pedido Recebido</h4><p>Relato registrado.</p></div></div>
+<div class="tl-item wait"><div class="tl-dot">⚖️</div><div class="tl-text"><h4>Em Análise Técnica</h4><p>IA verificando leis.</p></div></div>
+<div class="tl-item wait"><div class="tl-dot">🗳️</div><div class="tl-text"><h4>Aberto para Votação</h4><p>Comunidade votando.</p></div></div>
+<div class="tl-item wait"><div class="tl-dot">🚀</div><div class="tl-text"><h4>Mais Votado</h4><p>Meta atingida!</p></div></div>
+<div class="tl-item wait"><div class="tl-dot">🛠️</div><div class="tl-text"><h4>Em Execução</h4><p>Aprovado pelo Prefeito.</p></div></div>
+</div>
+</div>
+<div class="card">
+<h3>📝 Relato Original</h3>
+<div class="rel" id="r-relato"></div>
+<h3 style="margin-top:16px">🤖 Análise da IA</h3>
+<div class="rel-ia" id="r-analise"></div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ===== VOTAR ===== -->
+<div class="pagina" id="pag-votar">
+<section class="hero" style="padding:30px 24px 40px">
+<h2>🗳️ Votação Popular</h2>
+<p>Apoie os projetos do seu bairro!</p>
+<div class="stats">
+<div class="stat"><b id="s5">0</b><small>Projetos</small></div>
+<div class="stat"><b id="s6">0</b><small>Votos totais</small></div>
+</div>
+</section>
+<div class="container wide">
+<div class="filtros">
+<button class="filtro ativo" onclick="filtrar('todos',this)">📋 Todos</button>
+<button class="filtro" onclick="filtrar('Obras',this)">🏗️ Obras</button>
+<button class="filtro" onclick="filtrar('Saúde',this)">🏥 Saúde</button>
+<button class="filtro" onclick="filtrar('Educação',this)">📚 Educação</button>
+<button class="filtro" onclick="filtrar('Segurança',this)">🔒 Segurança</button>
+<button class="filtro" onclick="filtrar('Meio Ambiente',this)">🌳 Meio Amb.</button>
+<button class="filtro" onclick="filtrar('Cultura',this)">🎭 Cultura</button>
+<button class="filtro" onclick="filtrar('Esporte',this)">⚽ Esporte</button>
+<button class="filtro" onclick="filtrar('top',this)">🚀 Mais Votados</button>
+</div>
+<div id="lista-projetos"></div>
+</div>
+</div>
+
+<!-- ===== PREFEITO (LOGIN) ===== -->
+<div class="pagina" id="pag-prefeito">
+<div id="prefeito-login">
+<div class="login-box">
+<div class="card">
+<div class="login-ico">🏛️</div>
+<h3 style="color:var(--azul);margin-bottom:4px">Painel do Prefeito</h3>
+<p style="color:var(--texto);margin-bottom:20px;font-size:.9rem">Acesso restrito. Insira suas credenciais.</p>
+<div class="form-g"><label>E-mail</label><input type="email" id="login-email" placeholder="prefeito@govcolab.com"></div>
+<div class="form-g"><label>Senha</label><input type="password" id="login-senha" placeholder="••••••••" onkeypress="if(event.key==='Enter')fazerLogin()"></div>
+<button class="btn btn-yellow" style="width:100%;margin-top:8px" onclick="fazerLogin()">🔐 Entrar como Prefeito</button>
+<p id="login-erro" style="color:var(--vermelho);font-size:.82rem;margin-top:10px;display:none">❌ Credenciais inválidas!</p>
+</div>
+</div>
+</div>
+<div id="prefeito-painel" style="display:none">
+<div class="admin-header">
+<h2>🏛️ Painel do Prefeito</h2>
+<p style="opacity:.9;margin-top:6px">Bem-vindo, Prefeito! Gerencie os chamados da cidade.</p>
+<div class="admin-stats">
+<div class="admin-stat"><b id="a-total">0</b><small>Total</small></div>
+<div class="admin-stat"><b id="a-pendentes">0</b><small>Pendentes</small></div>
+<div class="admin-stat"><b id="a-votacao">0</b><small>Em Votação</small></div>
+<div class="admin-stat"><b id="a-aprovados">0</b><small>Aprovados</small></div>
+<div class="admin-stat"><b id="a-votos">0</b><small>Votos</small></div>
+</div>
+</div>
+<div class="container wide">
+<div class="tab-btns">
+<button class="tab-btn ativo" onclick="tabAdmin('todos',this)">📋 Todos</button>
+<button class="tab-btn" onclick="tabAdmin('pendentes',this)">⏳ Pendentes</button>
+<button class="tab-btn" onclick="tabAdmin('votacao',this)">🗳️ Votação</button>
+<button class="tab-btn" onclick="tabAdmin('aprovados',this)">✅ Aprovados</button>
+<button class="tab-btn" onclick="tabAdmin('ranking',this)">🏆 Ranking</button>
+</div>
+<div id="admin-conteudo"></div>
+<div style="text-align:center;margin-top:20px">
+<button class="btn btn-red btn-sm" onclick="sairPrefeito()">🚪 Sair do Painel</button>
+</div>
+</div>
+</div>
+</div>
+
+<!-- MODAL SUCESSO -->
+<div class="modal-bg" id="modal-ok">
+<div class="modal">
+<div class="ico">🎉</div>
+<h3>Chamado Registrado!</h3>
+<p>Olá, <b id="m-nome"></b>!</p>
+<p>📥 Seu pedido foi recebido.</p>
+<p>Seu protocolo:</p>
+<div class="proto" id="m-proto"></div>
+<p style="font-size:.83rem;margin-top:10px">📌 Guarde esse número!<br>🤖 A IA já está analisando.</p>
+<button class="btn btn-blue" onclick="fecharModal()">✅ Entendi!</button>
+<button class="btn btn-outline" onclick="fecharModal();ir('acompanhar')">🔍 Acompanhar</button>
+</div>
+</div>
+
+<!-- MODAL VOTO -->
+<div class="modal-bg" id="modal-voto">
+<div class="modal">
+<div class="ico">🗳️</div>
+<h3>Confirmar Voto</h3>
+<p>Projeto:</p>
+<p style="font-weight:800;color:var(--azul)" id="mv-titulo"></p>
+<input type="hidden" id="mv-id">
+<div class="form-g" style="text-align:left;margin-top:16px">
+<label>Seu E-mail</label>
+<input type="email" id="mv-email" placeholder="seu@email.com">
+<small>Cada e-mail vota 1 vez por projeto.</small>
+</div>
+<button class="btn btn-green" style="width:100%" onclick="confirmarVoto()">✅ Confirmar Voto</button>
+<button class="btn btn-outline" style="width:100%;margin-top:8px" onclick="fecharVoto()">Cancelar</button>
+</div>
+</div>
+
+<footer class="footer">
+<p>🏛️ <b>GovCo-Lab</b> — Governo Colaborativo com IA</p>
+<p>Projeto Técnico | Ensino Médio em TI</p>
+</footer>
+
+<script>
+// === DB ===
+function getDB(){return JSON.parse(localStorage.getItem('govco2')||'[]')}
+function setDB(d){localStorage.setItem('govco2',JSON.stringify(d))}
+
+function initDB(){
+if(getDB().length>0)return;
+setDB([
+{id:1401,data:'10/06/2025 08:30',nome:'Maria Silva',email:'maria@email.com',bairro:'Centro',cat:'infraestrutura',relato:'A rua principal está cheia de buracos enormes. Já causou dois acidentes essa semana.',titulo:'Operação Tapa-Buracos - Rua Principal do Centro',sec:'Obras',analise:'Demanda urgente que impacta a mobilidade urbana. Há respaldo no Plano Diretor para manutenção viária prioritária. Recomenda-se ação imediata.',custo:'Médio Custo',status:'🗳️ Aberto para Votação',sc:3,votos:38,meta:50,votantes:[],curtidas:24,comentarios:[{nome:'José M.',texto:'Concordo demais! Minha rua também.',data:'12/06'}]},
+{id:1402,data:'09/06/2025 14:15',nome:'João Santos',email:'joao@email.com',bairro:'Vila Nova',cat:'meio-ambiente',relato:'Precisamos de uma horta comunitária no terreno baldio da Vila Nova para alimentar as famílias carentes.',titulo:'Horta Comunitária Sustentável - Vila Nova',sec:'Meio Ambiente',analise:'Alta relevância social, promove segurança alimentar e sustentabilidade. Alinhado com políticas municipais de meio ambiente.',custo:'Baixo Custo',status:'🚀 Mais Votado',sc:4,votos:52,meta:50,votantes:[],curtidas:41,comentarios:[{nome:'Ana P.',texto:'Projeto incrível! Minha família vai participar.',data:'11/06'},{nome:'Carlos R.',texto:'Finalmente alguém pensou nisso!',data:'12/06'}]},
+{id:1403,data:'11/06/2025 10:00',nome:'Ana Oliveira',email:'ana@email.com',bairro:'Jardim América',cat:'seguranca',relato:'As ruas ficam completamente escuras à noite. Já fui assaltada duas vezes este ano.',titulo:'Iluminação Pública LED - Jardim América',sec:'Segurança',analise:'Iluminação é fator essencial de segurança. Viabilidade técnica comprovada com impacto direto na redução de criminalidade.',custo:'Médio Custo',status:'🗳️ Aberto para Votação',sc:3,votos:45,meta:50,votantes:[],curtidas:33,comentarios:[{nome:'Pedro S.',texto:'Moro aqui e confirmo, é muito perigoso.',data:'13/06'}]},
+{id:1404,data:'11/06/2025 11:30',nome:'Carlos Pereira',email:'carlos@email.com',bairro:'São José',cat:'saude',relato:'O posto de saúde só funciona até as 17h. Quem trabalha o dia todo não consegue médico.',titulo:'Ampliação de Horário - UBS São José',sec:'Saúde',analise:'Ampliação atende demanda real dos trabalhadores. Requer adequação de escala e orçamento para horas extras.',custo:'Alto Custo',status:'🗳️ Aberto para Votação',sc:3,votos:47,meta:50,votantes:[],curtidas:38,comentarios:[]},
+{id:1405,data:'12/06/2025 15:45',nome:'Fernanda Lima',email:'fernanda@email.com',bairro:'Boa Vista',cat:'educacao',relato:'A escola municipal precisa de uma biblioteca. As crianças não têm acesso a livros e internet.',titulo:'Biblioteca Digital e Física - EM Boa Vista',sec:'Educação',analise:'Acesso à leitura e tecnologia é direito fundamental. Pode ser implementado com parcerias e doações.',custo:'Baixo Custo',status:'🗳️ Aberto para Votação',sc:3,votos:29,meta:50,votantes:[],curtidas:22,comentarios:[{nome:'Lucia M.',texto:'Sou professora lá e apoio 100%!',data:'14/06'}]},
+{id:1406,data:'13/06/2025 09:00',nome:'Roberto Alves',email:'roberto@email.com',bairro:'Industrial',cat:'transito',relato:'O cruzamento da Av. Brasil com a Rua 7 não tem semáforo. Todo dia tem quase-acidente.',titulo:'Semáforo Inteligente - Cruzamento Av. Brasil',sec:'Trânsito',analise:'Cruzamento de alto fluxo sem sinalização adequada. Estudo de tráfego confirma necessidade urgente de semáforo.',custo:'Médio Custo',status:'🗳️ Aberto para Votação',sc:3,votos:34,meta:50,votantes:[],curtidas:27,comentarios:[]},
+{id:1407,data:'13/06/2025 16:20',nome:'Patricia Costa',email:'patricia@email.com',bairro:'Vila Nova',cat:'cultura',relato:'Nosso bairro não tem nenhum espaço cultural. Os jovens ficam na rua sem opção de lazer.',titulo:'Centro Cultural Comunitário - Vila Nova',sec:'Cultura',analise:'Espaço cultural promove inclusão social e reduz vulnerabilidade juvenil. Pode utilizar prédio público ocioso.',custo:'Alto Custo',status:'🗳️ Aberto para Votação',sc:3,votos:19,meta:50,votantes:[],curtidas:15,comentarios:[]},
+{id:1408,data:'14/06/2025 08:00',nome:'Lucas Mendes',email:'lucas@email.com',bairro:'Parque Real',cat:'esporte',relato:'A quadra do bairro está destruída. As crianças jogam bola no meio da rua com risco de atropelamento.',titulo:'Reforma da Quadra Poliesportiva - Parque Real',sec:'Esporte',analise:'Espaço esportivo é essencial para saúde e convivência comunitária. Reforma tem custo acessível e alto impacto social.',custo:'Baixo Custo',status:'🗳️ Aberto para Votação',sc:3,votos:41,meta:50,votantes:[],curtidas:35,comentarios:[{nome:'Marcos T.',texto:'Meus filhos precisam disso urgente!',data:'15/06'}]},
+{id:1409,data:'14/06/2025 13:30',nome:'Sandra Ferreira',email:'sandra@email.com',bairro:'Centro',cat:'saude',relato:'Não temos farmácia popular no centro. Idosos precisam pegar ônibus para buscar remédios.',titulo:'Farmácia Popular - Região Central',sec:'Saúde',analise:'Acesso a medicamentos é direito básico. Farmácia popular no centro atenderia milhares de idosos e pessoas com mobilidade reduzida.',custo:'Médio Custo',status:'🗳️ Aberto para Votação',sc:3,votos:36,meta:50,votantes:[],curtidas:29,comentarios:[]},
+{id:1410,data:'15/06/2025 10:15',nome:'Diego Martins',email:'diego@email.com',bairro:'Jardim América',cat:'meio-ambiente',relato:'O córrego que passa pelo bairro está cheio de lixo e esgoto. O cheiro é insuportável.',titulo:'Despoluição e Revitalização do Córrego - Jardim América',sec:'Meio Ambiente',analise:'Despoluição de córrego é urgente para saúde pública e meio ambiente. Requer parceria com concessionária de saneamento.',custo:'Alto Custo',status:'🗳️ Aberto para Votação',sc:3,votos:28,meta:50,votantes:[],curtidas:20,comentarios:[{nome:'Rita G.',texto:'Moro perto e o cheiro é horrível no verão.',data:'16/06'}]}
+]);
+}
+
+function stats(){
+const d=getDB();
+document.getElementById('s1').textContent=d.length;
+document.getElementById('s2').textContent=d.filter(c=>c.sc>=3&&c.sc<5).length;
+document.getElementById('s3').textContent=d.reduce((s,c)=>s+c.votos,0);
+document.getElementById('s4').textContent=d.filter(c=>c.sc>=5).length;
+document.getElementById('s5').textContent=d.filter(c=>c.sc>=3).length;
+document.getElementById('s6').textContent=d.reduce((s,c)=>s+c.votos,0);
+}
+
+// === NAV ===
+function ir(pag){
+document.querySelectorAll('.pagina').forEach(p=>p.classList.remove('ativa'));
+document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('ativo'));
+document.getElementById('pag-'+pag).classList.add('ativa');
+const nb=document.getElementById('nav-'+pag);if(nb)nb.classList.add('ativo');
+if(pag==='votar')carregarProjetos('todos');
+if(pag==='prefeito'&&logado)atualizarAdmin('todos');
+stats();window.scrollTo(0,0);
+}
+
+// === CRIAR ===
+function enviarChamado(e){
+e.preventDefault();
+const nome=document.getElementById('f-nome').value.trim();
+const email=document.getElementById('f-email').value.trim();
+const bairro=document.getElementById('f-bairro').value.trim();
+const cat=document.getElementById('f-cat').value;
+const relato=document.getElementById('f-relato').value.trim();
+if(!nome||!email||!bairro||!cat||!relato){notif('err','⚠️','Preencha todos os campos!');return false}
+const btn=document.getElementById('btnEnviar');
+btn.disabled=true;btn.innerHTML='⏳ Registrando...';
+setTimeout(()=>{
+const db=getDB();
+const nid=db.length?Math.max(...db.map(c=>c.id))+1:1401;
+db.push({id:nid,data:new Date().toLocaleString('pt-BR'),nome,email,bairro,cat,relato,titulo:'',sec:'',analise:'',custo:'',status:'📥 Pedido Recebido',sc:1,votos:0,meta:50,votantes:[],curtidas:0,comentarios:[]});
+setDB(db);
+setTimeout(()=>{
+const d2=getDB();const c=d2.find(x=>x.id===nid);
+const secs={infraestrutura:'Obras',saude:'Saúde',educacao:'Educação',seguranca:'Segurança','meio-ambiente':'Meio Ambiente',transito:'Trânsito',cultura:'Cultura',esporte:'Esporte',outro:'Administração'};
+const tits={infraestrutura:['Revitalização de Via Pública','Melhoria de Infraestrutura'],saude:['Ampliação de Atendimento em Saúde','Melhoria de UBS'],educacao:['Melhoria de Infraestrutura Escolar','Programa Educacional'],seguranca:['Iluminação Pública LED','Segurança Comunitária'],'meio-ambiente':['Área Verde Comunitária','Revitalização Ambiental'],transito:['Sinalização Viária Inteligente','Reorganização de Tráfego'],cultura:['Centro Cultural Comunitário','Programa de Artes'],esporte:['Quadra Poliesportiva','Espaço Fitness'],outro:['Melhoria de Serviço Público','Desenvolvimento Local']};
+const anals=['Projeto de alta relevância social com impacto direto na qualidade de vida. Alinhado com o Plano Diretor Municipal e legislação vigente.','Demanda procedente que atende critérios de interesse público. Recomenda-se avaliação orçamentária para inclusão no planejamento.','Necessidade real da comunidade com viabilidade técnica comprovada. Impacto positivo estimado para mais de 500 famílias.'];
+const custos=['Baixo Custo','Médio Custo','Alto Custo'];
+const ts=tits[cat]||tits.outro;
+c.titulo=ts[Math.floor(Math.random()*ts.length)]+' - '+bairro;
+c.sec=secs[cat]||'Administração';
+c.analise=anals[Math.floor(Math.random()*anals.length)];
+c.custo=custos[Math.floor(Math.random()*custos.length)];
+c.status='🗳️ Aberto para Votação';c.sc=3;
+setDB(d2);stats();
+},3000);
+document.getElementById('m-nome').textContent=nome;
+document.getElementById('m-proto').textContent='#'+nid;
+document.getElementById('modal-ok').classList.add('vis');
+e.target.reset();btn.disabled=false;btn.innerHTML='📤 Enviar Minha Sugestão';stats();
+},1200);return false;
+}
+function fecharModal(){document.getElementById('modal-ok').classList.remove('vis')}
+
+// === ACOMPANHAR ===
+function buscar(){
+const v=document.getElementById('inp-proto').value.trim().replace('#','');
+if(!v||isNaN(v)){notif('err','⚠️','Número inválido!');return}
+const c=getDB().find(x=>x.id===parseInt(v));
+if(!c){document.getElementById('resultado').classList.remove('vis');document.getElementById('nao-achou').style.display='block';return}
+document.getElementById('nao-achou').style.display='none';
+document.getElementById('r-proto').textContent='#'+c.id;
+document.getElementById('r-nome').textContent=c.nome;
+document.getElementById('r-data').textContent=c.data;
+document.getElementById('r-bairro').textContent=c.bairro;
+document.getElementById('r-titulo').textContent=c.titulo||'Processando...';
+document.getElementById('r-sec').textContent=c.sec||'Processando...';
+document.getElementById('r-custo').textContent=c.custo||'Processando...';
+document.getElementById('r-status').textContent=c.status;
+document.getElementById('r-votos').textContent=c.votos+' / '+c.meta;
+document.getElementById('r-relato').textContent=c.relato;
+document.getElementById('r-analise').textContent=c.analise||'A IA ainda está processando...';
+const pct=Math.round((c.sc/5)*100);
+document.getElementById('r-pct').textContent=pct+'%';
+document.getElementById('r-bar').style.width=pct+'%';
+document.querySelectorAll('.tl-item').forEach((it,i)=>{it.classList.remove('done','current','wait');if(i+1<c.sc)it.classList.add('done');else if(i+1===c.sc)it.classList.add('current');else it.classList.add('wait')});
+document.getElementById('resultado').classList.add('vis');
+document.getElementById('resultado').scrollIntoView({behavior:'smooth'});
+}
+
+// === VOTAR ===
+const tagMap={'Obras':'tag-obras','Saúde':'tag-saude','Educação':'tag-educ','Segurança':'tag-seg','Meio Ambiente':'tag-amb','Trânsito':'tag-trans','Cultura':'tag-cultura','Esporte':'tag-esporte'};
+function carregarProjetos(filtro){
+const box=document.getElementById('lista-projetos');
+let ps=getDB().filter(c=>c.sc>=3);
+if(filtro==='top')ps=ps.filter(p=>p.sc>=4);
+else if(filtro!=='todos')ps=ps.filter(p=>p.sec===filtro);
+ps.sort((a,b)=>b.votos-a.votos);
+if(!ps.length){box.innerHTML='<div class="card" style="text-align:center;padding:50px"><p style="font-size:2.5rem">📭</p><h3 style="color:var(--texto)">Nenhum projeto</h3></div>';return}
+box.innerHTML=ps.map(p=>{
+const pct=Math.min((p.votos/p.meta)*100,100);
+const ok=p.votos>=p.meta;
+const tc=tagMap[p.sec]||'tag-adm';
+const coms=(p.comentarios||[]).map(c=>`<div class="comentario"><strong>${c.nome}</strong> <small>${c.data}</small><p>${c.texto}</p></div>`).join('');
+return `<div class="proj-card">
+<div class="proj-head"><span class="tag ${tc}">${p.sec}</span><span style="color:var(--texto);font-size:.8rem;font-weight:600">#${p.id}</span></div>
+<h3>${p.titulo}</h3>
+<p class="desc">${p.analise}</p>
+<div class="proj-meta"><span>📍 ${p.bairro}</span><span>💰 ${p.custo}</span><span>👤 ${p.nome}</span></div>
+<div class="vbar"><div class="vbar-fill" style="width:${pct}%"></div></div>
+<div class="proj-foot">
+<div class="votos"><b>${p.votos}</b><small>votos (meta: ${p.meta})</small></div>
+${ok?'<span class="btn btn-sm" style="background:#d1fae5;color:#065f46;cursor:default">🚀 Meta Atingida!</span>':`<button class="btn btn-green btn-sm" onclick="abrirVoto(${p.id})">👍 Apoiar</button>`}
+</div>
+<div class="interacoes">
+<button class="inter-btn ${p.curtido?'curtido':''}" onclick="curtir(${p.id})">❤️ <span id="curtidas-${p.id}">${p.curtidas||0}</span></button>
+<button class="inter-btn" onclick="toggleComent(${p.id})">💬 ${(p.comentarios||[]).length} comentários</button>
+</div>
+<div class="comentarios" id="coment-box-${p.id}" style="display:none">
+${coms}
+<div class="coment-form">
+<input type="text" id="coment-nome-${p.id}" placeholder="Seu nome" style="max-width:120px">
+<input type="text" id="coment-texto-${p.id}" placeholder="Escreva um comentário..." onkeypress="if(event.key==='Enter')addComent(${p.id})">
+<button class="btn btn-blue btn-xs" onclick="addComent(${p.id})">Enviar</button>
+</div>
+</div></div>`;
+}).join('');
+}
+function filtrar(f,btn){document.querySelectorAll('.filtro').forEach(b=>b.classList.remove('ativo'));btn.classList.add('ativo');carregarProjetos(f)}
+function abrirVoto(id){const c=getDB().find(x=>x.id===id);if(!c)return;document.getElementById('mv-titulo').textContent=c.titulo;document.getElementById('mv-id').value=id;document.getElementById('modal-voto').classList.add('vis')}
+function fecharVoto(){document.getElementById('modal-voto').classList.remove('vis');document.getElementById('mv-email').value=''}
+function confirmarVoto(){
+const id=parseInt(document.getElementById('mv-id').value);
+const email=document.getElementById('mv-email').value.trim();
+if(!email||!email.includes('@')){alert('E-mail válido!');return}
+const db=getDB();const c=db.find(x=>x.id===id);
+if(!c)return;
+if(c.votantes.includes(email)){alert('Você já votou!');return}
+c.votos++;c.votantes.push(email);
+if(c.votos>=c.meta&&c.sc<4){c.status='🚀 Mais Votado';c.sc=4}
+setDB(db);fecharVoto();
+const fa=document.querySelector('.filtro.ativo');
+const ft=fa?fa.dataset?.filtro||'todos':'todos';
+carregarProjetos('todos');stats();
+notif('ok','✅','Voto Registrado!','Obrigado por participar!');
+}
+function curtir(id){
+const db=getDB();const c=db.find(x=>x.id===id);if(!c)return;
+c.curtidas=(c.curtidas||0)+1;setDB(db);
+const el=document.getElementById('curtidas-'+id);if(el)el.textContent=c.curtidas;
+notif('ok','❤️','Curtido!','Você curtiu este projeto.');
+}
+function toggleComent(id){
+const box=document.getElementById('coment-box-'+id);
+if(box)box.style.display=box.style.display==='none'?'block':'none';
+}
+function addComent(id){
+const nome=document.getElementById('coment-nome-'+id).value.trim();
+const texto=document.getElementById('coment-texto-'+id).value.trim();
+if(!nome||!texto){alert('Preencha nome e comentário!');return}
+const db=getDB();const c=db.find(x=>x.id===id);if(!c)return;
+if(!c.comentarios)c.comentarios=[];
+c.comentarios.push({nome,texto,data:new Date().toLocaleDateString('pt-BR')});
+setDB(db);carregarProjetos('todos');
+notif('ok','💬','Comentário adicionado!','');
+}
+
+// === PREFEITO ===
+let logado=false;
+function fazerLogin(){
+const email=document.getElementById('login-email').value.trim();
+const senha=document.getElementById('login-senha').value;
+if(email==='prefeito@govcolab.com'&&senha==='admin123'){
+logado=true;
+document.getElementById('prefeito-login').style.display='none';
+document.getElementById('prefeito-painel').style.display='block';
+document.getElementById('login-erro').style.display='none';
+atualizarAdmin('todos');
+notif('ok','🏛️','Bem-vindo, Prefeito!','Painel carregado com sucesso.');
+}else{
+document.getElementById('login-erro').style.display='block';
+}
+}
+function sairPrefeito(){
+logado=false;
+document.getElementById('prefeito-login').style.display='block';
+document.getElementById('prefeito-painel').style.display='none';
+document.getElementById('login-email').value='';
+document.getElementById('login-senha').value='';
+}
+function atualizarAdmin(filtro){
+const db=getDB();
+document.getElementById('a-total').textContent=db.length;
+document.getElementById('a-pendentes').textContent=db.filter(c=>c.sc<=2).length;
+document.getElementById('a-votacao').textContent=db.filter(c=>c.sc===3).length;
+document.getElementById('a-aprovados').textContent=db.filter(c=>c.sc>=5).length;
+document.getElementById('a-votos').textContent=db.reduce((s,c)=>s+c.votos,0);
+
+const box=document.getElementById('admin-conteudo');
+
+if(filtro==='ranking'){
+const bairros={};
+db.forEach(c=>{if(!bairros[c.bairro])bairros[c.bairro]={votos:0,projetos:0};bairros[c.bairro].votos+=c.votos;bairros[c.bairro].projetos++});
+const rank=Object.entries(bairros).sort((a,b)=>b[1].votos-a[1].votos);
+box.innerHTML='<div class="card"><h3>🏆 Ranking de Bairros</h3><p class="sub">Bairros mais ativos por votação</p>'+
+rank.map((r,i)=>{
+const cls=i===0?'gold':i===1?'silver':i===2?'bronze':'';
+return `<div class="ranking-item"><div class="ranking-pos ${cls}">${i+1}</div><div class="ranking-info"><strong>${r[0]}</strong><br><small>${r[1].votos} votos · ${r[1].projetos} projetos</small></div></div>`;
+}).join('')+'</div>';
+return;
+}
+
+let ps=[...db];
+if(filtro==='pendentes')ps=ps.filter(c=>c.sc<=2);
+else if(filtro==='votacao')ps=ps.filter(c=>c.sc>=3&&c.sc<5);
+else if(filtro==='aprovados')ps=ps.filter(c=>c.sc>=5);
+ps.sort((a,b)=>b.votos-a.votos);
+
+if(!ps.length){box.innerHTML='<div class="card" style="text-align:center;padding:40px"><p style="font-size:2rem">📭</p><h3 style="color:var(--texto)">Nenhum chamado nesta categoria</h3></div>';return}
+
+box.innerHTML=ps.map(c=>{
+const sbClass='sb-'+c.sc;
+const assinado=c.sc>=5;
+return `<div class="admin-chamado">
+<div class="admin-chamado-head">
+<div>
+<h4>#${c.id} - ${c.titulo||'Processando...'}</h4>
+<p>👤 ${c.nome} · 📍 ${c.bairro} · 📅 ${c.data}</p>
+</div>
+<span class="status-badge ${sbClass}">${c.status}</span>
+</div>
+<p><b>Relato:</b> ${c.relato}</p>
+<p><b>Secretaria:</b> ${c.sec||'—'} · <b>Custo:</b> ${c.custo||'—'} · <b>Votos:</b> ${c.votos}/${c.meta} · ❤️ ${c.curtidas||0}</p>
+${assinado?`<div class="assinatura"><p>✅ PROJETO APROVADO E ASSINADO</p><div class="sig">Prefeito Municipal</div><p style="font-size:.75rem;margin-top:4px">Assinado digitalmente em ${c.dataAssinatura||c.data}</p></div>`:`
+<div class="admin-btns">
+${c.sc<3?`<button class="btn btn-blue btn-sm" onclick="mudarStatus(${c.id},3)">⏩ Enviar para Votação</button>`:''}
+${c.sc>=3&&c.sc<4?`<button class="btn btn-roxo btn-sm" onclick="mudarStatus(${c.id},4)">🚀 Marcar Mais Votado</button>`:''}
+${c.sc>=4?`<button class="btn btn-green btn-sm" onclick="aprovar(${c.id})">✍️ Assinar e Aprovar</button>`:''}
+${c.sc<5?`<button class="btn btn-red btn-sm" onclick="mudarStatus(${c.id},1)">🔄 Reiniciar</button>`:''}
+</div>`}
+</div>`;
+}).join('');
+}
+function tabAdmin(f,btn){document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('ativo'));btn.classList.add('ativo');atualizarAdmin(f)}
+function mudarStatus(id,sc){
+const db=getDB();const c=db.find(x=>x.id===id);if(!c)return;
+const statuses={1:'📥 Pedido Recebido',2:'⚖️ Em Análise Técnica',3:'🗳️ Aberto para Votação',4:'🚀 Mais Votado',5:'🛠️ Em Execução'};
+c.sc=sc;c.status=statuses[sc]||c.status;
+setDB(db);atualizarAdmin('todos');stats();
+notif('ok','✅','Status atualizado!','Chamado #'+id+' → '+statuses[sc]);
+}
+function aprovar(id){
+const db=getDB();const c=db.find(x=>x.id===id);if(!c)return;
+c.sc=5;c.status='🛠️ Pedido Aceito (Execução)';c.dataAssinatura=new Date().toLocaleString('pt-BR');
+setDB(db);atualizarAdmin('todos');stats();
+notif('ok','✍️','Projeto Aprovado!','Chamado #'+id+' foi assinado pelo Prefeito e entrou em execução!');
+}
+
+// === NOTIF ===
+function notif(tipo,ico,tit,msg){
+const n=document.createElement('div');
+n.className='notif notif-'+tipo;
+n.innerHTML=`<span class="ni">${ico}</span><div><h4>${tit}</h4><p>${msg}</p></div>`;
+document.body.appendChild(n);
+setTimeout(()=>{n.style.opacity='0';n.style.transform='translateX(80px)';n.style.transition='.4s';setTimeout(()=>n.remove(),400)},4500);
+}
+
+// === INIT ===
+document.addEventListener('DOMContentLoaded',()=>{initDB();stats()});
+</script>
+</body>
+</html>
